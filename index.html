@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GuessTheFlag.io</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="home-screen">
+    <h1>GuessTheFlag.io</h1>
+    <p>Test your flag knowledge!</p>
+    <button onclick="startGame(5)">Easy (5 Flags)</button>
+    <button onclick="startGame(10)">Medium (10 Flags)</button>
+    <button onclick="startGame(20)">Hard (20 Flags)</button>
+  </div>
+  <div id="game-screen" style="display:none;">
+    <div id="score">Score: 0</div>
+    <div id="lives">Lives: ♥♥♥</div>
+    <img id="flag" src="" alt="Country Flag">
+    <div id="timer">Time: 15s</div>
+    <div id="feedback" style="color: green; font-weight: bold;"></div>
+    <div id="options"></div>
+    <div id="ads">
+      <!-- Google AdSense Code Here -->
+    </div>
+  </div>
+  <div id="end-screen" style="display:none;">
+    <h2>Game Over!</h2>
+    <p id="final-score"></p>
+    <p id="high-score"></p>
+    <button onclick="playAgain()">Play Again</button>
+    <button onclick="shareScore()">Share</button>
+    <div id="ads-end">
+      <!-- Google AdSense Code Here -->
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
