@@ -60,7 +60,7 @@ function startGame(numFlags) {
   score = 0;
   lives = 3;
   currentFlagIndex = 0;
-  maxFlags = numFlags; // Store max flags for scoring
+  maxFlags = numFlags;
   currentFlags = shuffleArray(flags).slice(0, numFlags);
   updateUI();
   nextFlag();
@@ -71,7 +71,7 @@ function nextFlag() {
     endGame();
     return;
   }
-  document.getElementById("feedback").textContent = ""; // Clear feedback
+  document.getElementById("feedback").textContent = "";
   let flag = currentFlags[currentFlagIndex];
   document.getElementById("flag").src = `assets/flags/${flag.code}.png`;
   let options = generateOptions(flag);
@@ -97,7 +97,7 @@ function checkAnswer(answer) {
   setTimeout(() => {
     currentFlagIndex++;
     nextFlag();
-  }, 1000); // 1-second delay
+  }, 1000);
 }
 
 function startTimer() {
@@ -142,6 +142,7 @@ function endGame() {
   document.getElementById("end-screen").style.display = "block";
   document.getElementById("final-score").textContent = `Final Score: ${score}/${maxFlags}`;
   updateHighScore();
+  updateLeaderboard();
 }
 
 function updateHighScore() {
@@ -153,14 +154,27 @@ function updateHighScore() {
   document.getElementById("high-score").textContent = `High Score: ${highScore}`;
 }
 
+function updateLeaderboard() {
+  let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+  leaderboard.push({ score: score, date: new Date().toLocaleDateString() });
+  leaderboard.sort((a, b) => b.score - a.score); // Sort descending
+  leaderboard = leaderboard.slice(0, 5); // Top 5 scores
+  localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+  
+  let leaderboardHTML = "Leaderboard:<br>";
+  leaderboard.forEach((entry, index) => {
+    leaderboardHTML += `${index + 1}. ${entry.score}/${maxFlags} - ${entry.date}<br>`;
+  });
+  document.getElementById("leaderboard").innerHTML = leaderboardHTML;
+}
+
 function playAgain() {
   document.getElementById("end-screen").style.display = "none";
   document.getElementById("home-screen").style.display = "block";
 }
 
 function shareScore() {
-  let text = `I scored ${score}/${maxFlags} on GuessTheFlag.io! Can you beat me?`;
-  navigator.clipboard.writeText(text).then(() => {
-    alert("Score copied to clipboard! Paste it anywhere to share.");
-  });
+  let text = `I scored ${score}/${maxFlags} on GuessTheFlag.io! Can you beat me? Play here: https://purposefullearning.github.io/guesstheflag`;
+  let url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
 }
