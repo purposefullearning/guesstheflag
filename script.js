@@ -156,25 +156,25 @@ function updateHighScore() {
 
 function updateLeaderboard() {
   let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
-  leaderboard.push({ score: score, date: new Date().toLocaleDateString() });
-  leaderboard.sort((a, b) => b.score - a.score); // Sort descending
-  leaderboard = leaderboard.slice(0, 5); // Top 5 scores
+  let xHandle = document.getElementById("x-handle").value || "Anonymous";
+  leaderboard.push({ score: score, handle: xHandle, date: new Date().toLocaleDateString() });
+  leaderboard.sort((a, b) => b.score - a.score);
+  leaderboard = leaderboard.slice(0, 5);
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
   
-  let leaderboardHTML = "Leaderboard:<br>";
+  let leaderboardHTML = "Leaderboard (Local):<br>";
   leaderboard.forEach((entry, index) => {
-    leaderboardHTML += `${index + 1}. ${entry.score}/${maxFlags} - ${entry.date}<br>`;
+    leaderboardHTML += `${index + 1}. ${entry.score}/${maxFlags} - ${entry.handle} - ${entry.date}<br>`;
   });
+  leaderboardHTML += "<br>Share your score on X with #GuessTheFlagScore to join the global leaderboard!";
   document.getElementById("leaderboard").innerHTML = leaderboardHTML;
 }
 
 function playAgain() {
   document.getElementById("end-screen").style.display = "none";
   document.getElementById("home-screen").style.display = "block";
+  document.getElementById("x-handle").value = ""; // Reset input
 }
 
 function shareScore() {
-  let text = `I scored ${score}/${maxFlags} on GuessTheFlag.io! Can you beat me? Play here: https://purposefullearning.github.io/guesstheflag`;
-  let url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
-  window.open(url, '_blank');
-}
+  let xHandle = document.getElementById("x-handle").value || "@Anonymous
