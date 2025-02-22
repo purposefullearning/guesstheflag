@@ -177,4 +177,8 @@ function playAgain() {
 }
 
 function shareScore() {
-  let xHandle = document.getElementById("x-handle").value || "@Anonymous
+  let xHandle = document.getElementById("x-handle").value || "@Anonymous";
+  let text = `${xHandle} scored ${score}/${maxFlags} on GuessTheFlag.io! Beat me: https://purposefullearning.github.io/guesstheflag #GuessTheFlagScore`;
+  let url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+}
