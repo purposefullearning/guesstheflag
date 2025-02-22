@@ -1,20 +1,46 @@
-#handle-input {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+  background-color: #f0f0f0;
 }
-#x-handle {
-  border: 1px solid #ccc;
-  border-radius: 4px;
+#flag {
+  width: 192px;
+  height: 144px;
+  margin: 20px auto; /* Center horizontally */
+  display: block; /* Ensure block-level for centering */
 }
 button {
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
   background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
 }
 button:hover {
   background-color: #45a049;
+}
+#options button {
+  display: block;
+  width: 200px;
+  margin: 10px auto;
+  background-color: #008CBA;
+  color: white;
+}
+#options button:hover {
+  background-color: #006d9c;
+}
+#score { position: absolute; top: 10px; left: 10px; font-size: 16px; color: #333; }
+#lives { position: absolute; top: 10px; right: 10px; font-size: 16px; color: #333; }
+#timer { margin: 10px 0; font-size: 18px; color: #333; }
+#feedback { margin: 10px; min-height: 20px; font-size: 16px; }
+#ads, #ads-end { margin-top: 20px; }
+@media (max-width: 600px) {
+  #flag { max-width: 150px; height: auto; }
+  button { width: 100%; padding: 8px 16px; }
+  #score, #lives { position: static; display: block; margin: 5px 0; }
+  #timer, #feedback { font-size: 14px; }
 }
