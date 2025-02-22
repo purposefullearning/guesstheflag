@@ -272,11 +272,15 @@ function nextFlag() {
   }
   document.getElementById("feedback").textContent = "";
   let flag = currentFlags[currentFlagIndex];
-  document.getElementById("flag").src = `assets/flags/${flag.code}.png`;
-  let options = generateOptions(flag);
-  document.getElementById("options").innerHTML = options.map(opt => 
-    `<button onclick="checkAnswer('${opt}')">${opt}</button>`).join("");
-  startTimer();
+  const img = document.getElementById("flag");
+  img.src = ""; // Clear previous
+  img.onload = () => {
+    let options = generateOptions(flag);
+    document.getElementById("options").innerHTML = options.map(opt => 
+      `<button onclick="checkAnswer('${opt}')">${opt}</button>`).join("");
+    startTimer();
+  };
+  img.src = `assets/flags/${flag.code}.png`;
 }
 
 function checkAnswer(answer) {
@@ -341,7 +345,7 @@ function endGame() {
   document.getElementById("end-screen").style.display = "block";
   document.getElementById("final-score").textContent = `Final Score: ${score}/${maxFlags}`;
   updateHighScore();
-  updateLeaderboard();
+  showHandlePrompt(); // Use in-game prompt instead of alert
 }
 
 function updateHighScore() {
@@ -371,12 +375,13 @@ function updateLeaderboard() {
   let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
   let xHandle = document.getElementById("x-handle").value.trim();
   if (!xHandle) {
-    alert("Please enter your X handle to update the leaderboard!");
+    showHandlePrompt(); // Show in-game prompt instead of alert
     return;
   }
   if (!xHandle.startsWith("@")) {
     xHandle = "@" + xHandle; // Prepend @ if missing
   }
+  document.getElementById("x-handle").value = xHandle; // Update input with formatted handle
   leaderboard.push({ score: score, handle: xHandle, maxFlags: maxFlags, date: new Date().toLocaleDateString() });
   leaderboard.sort((a, b) => b.score - a.score);
   leaderboard = leaderboard.slice(0, 5); // Top 5 for end screen
@@ -396,7 +401,8 @@ function updateLeaderboard() {
 function submitHandle() {
   let xHandle = document.getElementById("x-handle").value.trim();
   if (!xHandle) {
-    alert("Please enter your X handle (e.g., @username) to appear on the leaderboard!");
+    document.getElementById("handle-feedback").textContent = "Please enter your X handle (e.g., @username) to appear on the leaderboard!";
+    setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000);
     return;
   }
   if (!xHandle.startsWith("@")) {
@@ -412,16 +418,26 @@ function playAgain() {
   document.getElementById("end-screen").style.display = "none";
   document.getElementById("home-screen").style.display = "block";
   document.getElementById("x-handle").value = ""; // Clear handle on replay
+  document.getElementById("handle-feedback").textContent = ""; // Clear feedback
 }
 
 function shareScore() {
   let xHandle = document.getElementById("x-handle").value.trim();
   if (!xHandle) {
-    alert("Please submit your X handle before sharing to appear on X and the leaderboard!");
+    document.getElementById("handle-feedback").textContent = "Please submit your X handle before sharing to appear on X and the leaderboard!";
+    setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000);
     return;
   }
-  let text = `${xHandle} scored ${score}/${maxFlags} in Guess the Flag on TVBuzzNow! Can you beat me? Play now: https://tvbuzznow.com/guess-the-flags/ #GuessTheFlagScore #BarTrivia`;
+  let text = `${xHandle} scored ${score}/${maxFlags} in Guess The Flag Game on TVBuzzNow! Can you beat me? Play now: https://tvbuzznow.com/guess-the-flags/ #GuessTheFlagScore #BarTrivia`;
   let url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
   document.getElementById("x-handle").value = ""; // Clear after sharing
+  document.getElementById("handle-feedback").textContent = "Score shared on X! Play again or submit a new handle.";
+  setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000); // Clear feedback after 3s
+}
+
+function showHandlePrompt() {
+  document.getElementById("handle-feedback").textContent = "Please enter your X handle (e.g., @username) to update the leaderboard!";
+  setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000);
+  document.getElementById("x-handle").focus(); // Auto-focus input for ease
 }
