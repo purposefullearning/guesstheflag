@@ -64,7 +64,7 @@ function startGame(numFlags) {
   score = 0;
   lives = 3;
   currentFlagIndex = 0;
-  maxFlags = numFlags;
+  maxFlags = numFlags; // Set maxFlags for the game
   currentFlags = shuffleArray(flags).slice(0, numFlags);
   updateUI();
   nextFlag();
@@ -164,7 +164,8 @@ function updateHomeLeaderboard() {
   leaderboard = leaderboard.slice(0, 10); // Top 10 for home page
   let leaderboardHTML = "Top 10 Leaderboard:<br>";
   leaderboard.forEach((entry, index) => {
-    leaderboardHTML += `${index + 1}. ${entry.score}/${maxFlags} - ${entry.handle} - ${entry.date}<br>`;
+    let entryMaxFlags = entry.maxFlags || 5; // Default to 5 (Easy) if not stored
+    leaderboardHTML += `${index + 1}. ${entry.score}/${entryMaxFlags} - ${entry.handle} - ${entry.date}<br>`;
   });
   document.getElementById("leaderboard-home").innerHTML = leaderboardHTML || "No scores yet—start playing!";
 }
@@ -172,14 +173,14 @@ function updateHomeLeaderboard() {
 function updateLeaderboard() {
   let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
   let xHandle = document.getElementById("x-handle").value || "Anonymous";
-  leaderboard.push({ score: score, handle: xHandle, date: new Date().toLocaleDateString() });
+  leaderboard.push({ score: score, handle: xHandle, maxFlags: maxFlags, date: new Date().toLocaleDateString() });
   leaderboard.sort((a, b) => b.score - a.score);
   leaderboard = leaderboard.slice(0, 5); // Top 5 for end screen
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
   
   let leaderboardHTML = "Leaderboard (Local):<br>";
   leaderboard.forEach((entry, index) => {
-    leaderboardHTML += `${index + 1}. ${entry.score}/${maxFlags} - ${entry.handle} - ${entry.date}<br>`;
+    leaderboardHTML += `${index + 1}. ${entry.score}/${entry.maxFlags} - ${entry.handle} - ${entry.date}<br>`;
   });
   leaderboardHTML += "<br>Share your score on X with #GuessTheFlagScore to join the global leaderboard!";
   document.getElementById("leaderboard").innerHTML = leaderboardHTML;
@@ -193,7 +194,7 @@ function playAgain() {
 
 function shareScore() {
   let xHandle = document.getElementById("x-handle").value || "@Anonymous";
-  let text = `${xHandle} scored ${score}/${maxFlags} on GuessTheFlag.io! Can you beat me? #GuessTheFlagScore`;
+  let text = `${xHandle} scored ${score}/${maxFlags} in Guess the Flag on TVBuzzNow! Can you beat me? #GuessTheFlagScore`;
   let url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
 }
