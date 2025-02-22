@@ -2,26 +2,26 @@ body {
   font-family: Arial, sans-serif;
   text-align: center;
   margin: 0;
-  padding: 40px; /* Doubled from 20px */
+  padding: 40px; /* Keep 2x for desktop */
   background-color: #f0f0f0;
 }
 
 #flag {
-  width: 384px; /* Doubled from 192px */
-  height: 288px; /* Doubled from 144px */
-  margin: 40px auto; /* Doubled from 20px, centered */
+  width: 384px; /* 2x, 192px original */
+  height: 288px; /* 2x, 144px original */
+  margin: 40px auto; /* 2x, centered */
   display: block; /* Ensure block-level for centering */
 }
 
 button {
-  padding: 20px 40px; /* Doubled from 10px 20px */
-  margin: 10px; /* Doubled from 5px */
+  padding: 20px 40px; /* 2x, 10px 20px original */
+  margin: 10px; /* 2x, 5px original */
   cursor: pointer;
   background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 8px; /* Doubled from 4px */
-  font-size: 32px; /* Doubled from 16px */
+  border-radius: 8px; /* 2x, 4px original */
+  font-size: 32px; /* 2x, 16px original */
 }
 
 button:hover {
@@ -30,11 +30,11 @@ button:hover {
 
 #options button {
   display: block;
-  width: 400px; /* Doubled from 200px */
-  margin: 20px auto; /* Doubled from 10px */
+  width: 400px; /* 2x, 200px original */
+  margin: 20px auto; /* 2x, 10px original */
   background-color: #008CBA;
   color: white;
-  font-size: 32px; /* Doubled from 16px */
+  font-size: 32px; /* 2x, 16px original */
 }
 
 #options button:hover {
@@ -43,65 +43,121 @@ button:hover {
 
 #score {
   position: absolute;
-  top: 20px; /* Doubled from 10px */
-  left: 20px; /* Doubled from 10px */
-  font-size: 32px; /* Doubled from 16px */
+  top: 20px; /* 2x, 10px original */
+  left: 20px; /* 2x, 10px original */
+  font-size: 32px; /* 2x, 16px original */
   color: #333;
 }
 
 #lives {
   position: absolute;
-  top: 20px; /* Doubled from 10px */
-  right: 20px; /* Doubled from 10px */
-  font-size: 32px; /* Doubled from 16px */
+  top: 20px; /* 2x, 10px original */
+  right: 20px; /* 2x, 10px original */
+  font-size: 32px; /* 2x, 16px original */
   color: #333;
 }
 
 #timer {
-  margin: 20px 0; /* Doubled from 10px */
-  font-size: 36px; /* Doubled from 18px */
+  margin: 20px 0; /* 2x, 10px original */
+  font-size: 36px; /* 2x, 18px original */
   color: #333;
 }
 
 #feedback {
-  margin: 20px; /* Doubled from 10px */
-  min-height: 40px; /* Doubled from 20px */
-  font-size: 32px; /* Doubled from 16px */
+  margin: 20px; /* 2x, 10px original */
+  min-height: 40px; /* 2x, 20px original */
+  font-size: 32px; /* 2x, 16px original */
 }
 
 #ads, #ads-end {
-  margin-top: 40px; /* Doubled from 20px */
+  margin-top: 40px; /* 2x, 20px original */
 }
 
 #handle-input {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* Doubled from 5px */
-  margin: 20px; /* Doubled from 10px */
+  gap: 10px; /* 2x, 5px original */
+  margin: 20px; /* 2x, 10px original */
 }
 
 #x-handle {
-  padding: 10px; /* Doubled from 5px */
-  width: 400px; /* Doubled from 200px */
-  font-size: 32px; /* Doubled from 16px */
-  border: 2px solid #ccc; /* Doubled from 1px */
-  border-radius: 8px; /* Doubled from 4px */
+  padding: 10px; /* 2x, 5px original */
+  width: 400px; /* 2x, 200px original */
+  font-size: 32px; /* 2x, 16px original */
+  border: 2px solid #ccc; /* 2x, 1px original */
+  border-radius: 8px; /* 2x, 4px original */
 }
 
 #handle-feedback {
-  margin: 10px; /* Doubled from 5px */
-  font-size: 32px; /* Doubled from 16px */
+  margin: 10px; /* 2x, 5px original */
+  font-size: 32px; /* 2x, 16px original */
   color: green;
   font-weight: bold;
 }
 
+/* Mobile-Friendly Adjustments (<600px, e.g., smartphones) */
 @media (max-width: 600px) {
-  #flag { max-width: 300px; height: auto; margin: 20px auto; } /* Adjusted, not doubled, for mobile fit */
-  button { width: 100%; padding: 16px 32px; font-size: 24px; } /* Reduced from 32px for mobile */
-  #options button { width: 100%; padding: 16px 32px; font-size: 24px; } /* Reduced from 32px */
-  #score, #lives { position: static; display: block; margin: 10px 0; font-size: 24px; } /* Reduced from 32px */
-  #timer, #feedback { font-size: 24px; margin: 10px 0; } /* Reduced from 36px/32px */
-  #x-handle { width: 100%; padding: 8px; font-size: 24px; } /* Reduced from 32px */
-  #handle-feedback { font-size: 24px; margin: 8px; } /* Reduced from 32px */
+  body {
+    padding: 20px; /* Halved from 40px for mobile */
+  }
+  
+  #flag {
+    max-width: 200px; /* Reduced from 300px, ~1.3x original 150px */
+    height: auto; /* Maintain aspect ratio */
+    margin: 20px auto; /* Halved from 40px */
+  }
+
+  button {
+    width: 100%; /* Full width for mobile */
+    padding: 12px 24px; /* Reduced from 20px 40px, ~1.2x original */
+    font-size: 20px; /* Reduced from 24px, ~1.25x original 16px */
+    margin: 5px; /* Halved from 10px */
+  }
+
+  #options button {
+    width: 100%; /* Full width for mobile */
+    padding: 12px 24px; /* Reduced from 20px 40px, ~1.2x original */
+    font-size: 20px; /* Reduced from 24px, ~1.25x original */
+    margin: 10px auto; /* Halved from 20px */
+  }
+
+  #score, #lives {
+    position: static; /* Stack on mobile */
+    display: block;
+    margin: 5px 0; /* Halved from 10px */
+    font-size: 20px; /* Reduced from 24px, ~1.25x original */
+  }
+
+  #timer {
+    margin: 10px 0; /* Halved from 20px */
+    font-size: 22px; /* Reduced from 24px, ~1.2x original 18px */
+  }
+
+  #feedback {
+    margin: 10px; /* Halved from 20px */
+    min-height: 20px; /* Halved from 40px */
+    font-size: 20px; /* Reduced from 24px, ~1.25x original */
+  }
+
+  #ads, #ads-end {
+    margin-top: 20px; /* Halved from 40px */
+  }
+
+  #handle-input {
+    flex-direction: column; /* Stack input/button vertically on mobile */
+    gap: 5px; /* Halved from 10px */
+    margin: 10px; /* Halved from 20px */
+  }
+
+  #x-handle {
+    width: 100%; /* Full width for mobile */
+    padding: 6px; /* Reduced from 10px, ~1.2x original */
+    font-size: 20px; /* Reduced from 24px, ~1.25x original */
+  }
+
+  #handle-feedback {
+    margin: 5px; /* Halved from 10px */
+    font-size: 20px; /* Reduced from 24px, ~1.25x original */
+  }
 }
