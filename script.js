@@ -355,11 +355,13 @@ function updateHighScore() {
 
 function updateHomeLeaderboard() {
   let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+  // Filter out entries without required fields
+  leaderboard = leaderboard.filter(entry => entry.score && entry.handle && entry.date && (entry.maxFlags || entry.maxFlags === 0));
   leaderboard.sort((a, b) => b.score - a.score);
   leaderboard = leaderboard.slice(0, 10); // Top 10 for home page
   let leaderboardHTML = "Top 10 Leaderboard:<br>";
   leaderboard.forEach((entry, index) => {
-    let entryMaxFlags = entry.maxFlags || 5; // Default to 5 (Easy) if not stored
+    let entryMaxFlags = entry.maxFlags || (entry.score <= 5 ? 5 : entry.score <= 10 ? 10 : entry.score <= 20 ? 20 : entry.score <= 50 ? 50 : 254); // Infer based on max possible score
     leaderboardHTML += `${index + 1}. ${entry.score}/${entryMaxFlags} - ${entry.handle} - ${entry.date}<br>`;
   });
   document.getElementById("leaderboard-home").innerHTML = leaderboardHTML || "No scores yet—start playing!";
@@ -367,7 +369,14 @@ function updateHomeLeaderboard() {
 
 function updateLeaderboard() {
   let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
-  let xHandle = document.getElementById("x-handle").value || "@Anonymous";
+  let xHandle = document.getElementById("x-handle").value.trim();
+  if (!xHandle) {
+    alert("Please enter your X handle to update the leaderboard!");
+    return;
+  }
+  if (!xHandle.startsWith("@")) {
+    xHandle = "@" + xHandle; // Prepend @ if missing
+  }
   leaderboard.push({ score: score, handle: xHandle, maxFlags: maxFlags, date: new Date().toLocaleDateString() });
   leaderboard.sort((a, b) => b.score - a.score);
   leaderboard = leaderboard.slice(0, 5); // Top 5 for end screen
@@ -375,21 +384,22 @@ function updateLeaderboard() {
   
   let leaderboardHTML = "Leaderboard (Local):<br>";
   leaderboard.forEach((entry, index) => {
-    leaderboardHTML += `${index + 1}. ${entry.score}/${entryMaxFlags} - ${entry.handle} - ${entry.date}<br>`;
+    leaderboardHTML += `${index + 1}. ${entry.score}/${entry.maxFlags} - ${entry.handle} - ${entry.date}<br>`;
   });
   leaderboardHTML += "<br>Share your score on X with #GuessTheFlagScore to join the global leaderboard!";
   document.getElementById("leaderboard").innerHTML = leaderboardHTML;
-}
-
-function playAgain() {
-  document.getElementById("end-screen").style.display = "none";
-  document.getElementById("home-screen").style.display = "block";
-  document.getElementById("x-handle").value = ""; // Clear handle on replay
+  document.getElementById("x-handle").value = ""; // Clear after updating
+  document.getElementById("handle-feedback").textContent = "Handle submitted! Share your score or play again.";
+  setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000); // Clear feedback after 3s
 }
 
 function submitHandle() {
-  let xHandle = document.getElementById("x-handle").value.trim() || "@Anonymous";
-  if (xHandle !== "@Anonymous" && !xHandle.startsWith("@")) {
+  let xHandle = document.getElementById("x-handle").value.trim();
+  if (!xHandle) {
+    alert("Please enter your X handle (e.g., @username) to appear on the leaderboard!");
+    return;
+  }
+  if (!xHandle.startsWith("@")) {
     xHandle = "@" + xHandle; // Prepend @ if missing
   }
   document.getElementById("x-handle").value = xHandle; // Update input with formatted handle
@@ -398,9 +408,20 @@ function submitHandle() {
   setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000); // Clear feedback after 3s
 }
 
+function playAgain() {
+  document.getElementById("end-screen").style.display = "none";
+  document.getElementById("home-screen").style.display = "block";
+  document.getElementById("x-handle").value = ""; // Clear handle on replay
+}
+
 function shareScore() {
-  let xHandle = document.getElementById("x-handle").value || "@Anonymous";
+  let xHandle = document.getElementById("x-handle").value.trim();
+  if (!xHandle) {
+    alert("Please submit your X handle before sharing to appear on X and the leaderboard!");
+    return;
+  }
   let text = `${xHandle} scored ${score}/${maxFlags} in Guess the Flag on TVBuzzNow! Can you beat me? Play now: https://tvbuzznow.com/guess-the-flags/ #GuessTheFlagScore #BarTrivia`;
   let url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
+  document.getElementById("x-handle").value = ""; // Clear after sharing
 }
