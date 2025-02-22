@@ -62,7 +62,7 @@ function startGame(numFlags) {
   document.getElementById("home-screen").style.display = "none";
   document.getElementById("game-screen").style.display = "block";
   score = 0;
-  lives = 3;
+  lives = 3 + Math.floor(numFlags / 20); // Extra lives for longer games
   currentFlagIndex = 0;
   maxFlags = numFlags; // Set maxFlags for the game
   currentFlags = shuffleArray(flags).slice(0, numFlags);
@@ -105,7 +105,7 @@ function checkAnswer(answer) {
 }
 
 function startTimer() {
-  let timeLeft = 15;
+  let timeLeft = maxFlags <= 20 ? 15 : 20; // 15s for short games, 20s for longer ones
   document.getElementById("timer").textContent = `Time: ${timeLeft}s`;
   timer = setInterval(() => {
     timeLeft--;
@@ -180,7 +180,7 @@ function updateLeaderboard() {
   
   let leaderboardHTML = "Leaderboard (Local):<br>";
   leaderboard.forEach((entry, index) => {
-    leaderboardHTML += `${index + 1}. ${entry.score}/${entry.maxFlags} - ${entry.handle} - ${entry.date}<br>`;
+    leaderboardHTML += `${index + 1}. ${entry.score}/${entryMaxFlags} - ${entry.handle} - ${entry.date}<br>`;
   });
   leaderboardHTML += "<br>Share your score on X with #GuessTheFlagScore to join the global leaderboard!";
   document.getElementById("leaderboard").innerHTML = leaderboardHTML;
