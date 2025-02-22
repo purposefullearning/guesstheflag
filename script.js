@@ -153,7 +153,7 @@ function updateHighScore() {
   let highScore = localStorage.getItem("highScore") || 0;
   if (score > highScore) {
     highScore = score;
-    localStorage.getItem("highScore", highScore);
+    localStorage.setItem("highScore", highScore);
   }
   document.getElementById("high-score").textContent = `High Score: ${highScore}`;
 }
