@@ -2,45 +2,106 @@ body {
   font-family: Arial, sans-serif;
   text-align: center;
   margin: 0;
-  padding: 20px;
+  padding: 40px; /* Doubled from 20px */
   background-color: #f0f0f0;
 }
+
 #flag {
-  width: 192px;
-  height: 144px;
-  margin: 20px auto; /* Center horizontally */
+  width: 384px; /* Doubled from 192px */
+  height: 288px; /* Doubled from 144px */
+  margin: 40px auto; /* Doubled from 20px, centered */
   display: block; /* Ensure block-level for centering */
 }
+
 button {
-  padding: 10px 20px;
-  margin: 5px;
+  padding: 20px 40px; /* Doubled from 10px 20px */
+  margin: 10px; /* Doubled from 5px */
   cursor: pointer;
   background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px; /* Doubled from 4px */
+  font-size: 32px; /* Doubled from 16px */
 }
+
 button:hover {
   background-color: #45a049;
 }
+
 #options button {
   display: block;
-  width: 200px;
-  margin: 10px auto;
+  width: 400px; /* Doubled from 200px */
+  margin: 20px auto; /* Doubled from 10px */
   background-color: #008CBA;
   color: white;
+  font-size: 32px; /* Doubled from 16px */
 }
+
 #options button:hover {
   background-color: #006d9c;
 }
-#score { position: absolute; top: 10px; left: 10px; font-size: 16px; color: #333; }
-#lives { position: absolute; top: 10px; right: 10px; font-size: 16px; color: #333; }
-#timer { margin: 10px 0; font-size: 18px; color: #333; }
-#feedback { margin: 10px; min-height: 20px; font-size: 16px; }
-#ads, #ads-end { margin-top: 20px; }
+
+#score {
+  position: absolute;
+  top: 20px; /* Doubled from 10px */
+  left: 20px; /* Doubled from 10px */
+  font-size: 32px; /* Doubled from 16px */
+  color: #333;
+}
+
+#lives {
+  position: absolute;
+  top: 20px; /* Doubled from 10px */
+  right: 20px; /* Doubled from 10px */
+  font-size: 32px; /* Doubled from 16px */
+  color: #333;
+}
+
+#timer {
+  margin: 20px 0; /* Doubled from 10px */
+  font-size: 36px; /* Doubled from 18px */
+  color: #333;
+}
+
+#feedback {
+  margin: 20px; /* Doubled from 10px */
+  min-height: 40px; /* Doubled from 20px */
+  font-size: 32px; /* Doubled from 16px */
+}
+
+#ads, #ads-end {
+  margin-top: 40px; /* Doubled from 20px */
+}
+
+#handle-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Doubled from 5px */
+  margin: 20px; /* Doubled from 10px */
+}
+
+#x-handle {
+  padding: 10px; /* Doubled from 5px */
+  width: 400px; /* Doubled from 200px */
+  font-size: 32px; /* Doubled from 16px */
+  border: 2px solid #ccc; /* Doubled from 1px */
+  border-radius: 8px; /* Doubled from 4px */
+}
+
+#handle-feedback {
+  margin: 10px; /* Doubled from 5px */
+  font-size: 32px; /* Doubled from 16px */
+  color: green;
+  font-weight: bold;
+}
+
 @media (max-width: 600px) {
-  #flag { max-width: 150px; height: auto; }
-  button { width: 100%; padding: 8px 16px; }
-  #score, #lives { position: static; display: block; margin: 5px 0; }
-  #timer, #feedback { font-size: 14px; }
+  #flag { max-width: 300px; height: auto; margin: 20px auto; } /* Adjusted, not doubled, for mobile fit */
+  button { width: 100%; padding: 16px 32px; font-size: 24px; } /* Reduced from 32px for mobile */
+  #options button { width: 100%; padding: 16px 32px; font-size: 24px; } /* Reduced from 32px */
+  #score, #lives { position: static; display: block; margin: 10px 0; font-size: 24px; } /* Reduced from 32px */
+  #timer, #feedback { font-size: 24px; margin: 10px 0; } /* Reduced from 36px/32px */
+  #x-handle { width: 100%; padding: 8px; font-size: 24px; } /* Reduced from 32px */
+  #handle-feedback { font-size: 24px; margin: 8px; } /* Reduced from 32px */
 }
