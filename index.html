@@ -33,7 +33,11 @@
     <p id="final-score"></p>
     <p id="high-score"></p>
     <div id="leaderboard" style="margin: 10px;"></div>
-    <input type="text" id="x-handle" placeholder="Your X handle (e.g., @username)" style="margin: 10px;">
+    <div id="handle-input" style="margin: 10px;">
+      <input type="text" id="x-handle" placeholder="Enter your X handle (e.g., @username)" style="padding: 5px; width: 200px;">
+      <button onclick="submitHandle()" style="padding: 5px 10px; margin-left: 5px;">Submit</button>
+    </div>
+    <p id="handle-feedback" style="color: green; font-weight: bold; margin: 5px;"></p>
     <button onclick="playAgain()">Play Again</button>
     <button onclick="shareScore()">Share</button>
     <div id="ads-end">
