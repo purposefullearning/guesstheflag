@@ -367,7 +367,7 @@ function updateHomeLeaderboard() {
 
 function updateLeaderboard() {
   let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
-  let xHandle = document.getElementById("x-handle").value || "Anonymous";
+  let xHandle = document.getElementById("x-handle").value || "@Anonymous";
   leaderboard.push({ score: score, handle: xHandle, maxFlags: maxFlags, date: new Date().toLocaleDateString() });
   leaderboard.sort((a, b) => b.score - a.score);
   leaderboard = leaderboard.slice(0, 5); // Top 5 for end screen
@@ -384,12 +384,23 @@ function updateLeaderboard() {
 function playAgain() {
   document.getElementById("end-screen").style.display = "none";
   document.getElementById("home-screen").style.display = "block";
-  document.getElementById("x-handle").value = ""; // Reset input
+  document.getElementById("x-handle").value = ""; // Clear handle on replay
+}
+
+function submitHandle() {
+  let xHandle = document.getElementById("x-handle").value.trim() || "@Anonymous";
+  if (xHandle !== "@Anonymous" && !xHandle.startsWith("@")) {
+    xHandle = "@" + xHandle; // Prepend @ if missing
+  }
+  document.getElementById("x-handle").value = xHandle; // Update input with formatted handle
+  updateLeaderboard(); // Update leaderboard with new handle
+  document.getElementById("handle-feedback").textContent = "Handle submitted! Share your score or play again.";
+  setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000); // Clear feedback after 3s
 }
 
 function shareScore() {
   let xHandle = document.getElementById("x-handle").value || "@Anonymous";
-  let text = `${xHandle} scored ${score}/${maxFlags} in Guess the Flag on TVBuzzNow! Can you beat me? #GuessTheFlagScore`;
+  let text = `${xHandle} scored ${score}/${maxFlags} in Guess the Flag on TVBuzzNow! Can you beat me? Play now: https://tvbuzznow.com/guess-the-flags/ #GuessTheFlagScore #BarTrivia`;
   let url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
 }
