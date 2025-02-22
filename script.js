@@ -53,6 +53,10 @@ let flags = [
 let currentFlags = [];
 let score = 0, lives = 3, currentFlagIndex = 0, timer, maxFlags;
 
+document.addEventListener("DOMContentLoaded", () => {
+  updateHomeLeaderboard();
+});
+
 function startGame(numFlags) {
   console.log("startGame called with", numFlags);
   document.getElementById("home-screen").style.display = "none";
@@ -149,9 +153,20 @@ function updateHighScore() {
   let highScore = localStorage.getItem("highScore") || 0;
   if (score > highScore) {
     highScore = score;
-    localStorage.setItem("highScore", highScore);
+    localStorage.getItem("highScore", highScore);
   }
   document.getElementById("high-score").textContent = `High Score: ${highScore}`;
+}
+
+function updateHomeLeaderboard() {
+  let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+  leaderboard.sort((a, b) => b.score - a.score);
+  leaderboard = leaderboard.slice(0, 10); // Top 10 for home page
+  let leaderboardHTML = "Top 10 Leaderboard:<br>";
+  leaderboard.forEach((entry, index) => {
+    leaderboardHTML += `${index + 1}. ${entry.score}/${maxFlags} - ${entry.handle} - ${entry.date}<br>`;
+  });
+  document.getElementById("leaderboard-home").innerHTML = leaderboardHTML || "No scores yet—start playing!";
 }
 
 function updateLeaderboard() {
@@ -159,7 +174,7 @@ function updateLeaderboard() {
   let xHandle = document.getElementById("x-handle").value || "Anonymous";
   leaderboard.push({ score: score, handle: xHandle, date: new Date().toLocaleDateString() });
   leaderboard.sort((a, b) => b.score - a.score);
-  leaderboard = leaderboard.slice(0, 5);
+  leaderboard = leaderboard.slice(0, 5); // Top 5 for end screen
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
   
   let leaderboardHTML = "Leaderboard (Local):<br>";
@@ -178,7 +193,7 @@ function playAgain() {
 
 function shareScore() {
   let xHandle = document.getElementById("x-handle").value || "@Anonymous";
-  let text = `${xHandle} scored ${score}/${maxFlags} on GuessTheFlag.io! Beat me: https://purposefullearning.github.io/guesstheflag #GuessTheFlagScore`;
+  let text = `${xHandle} scored ${score}/${maxFlags} on GuessTheFlag.io! Can you beat me? #GuessTheFlagScore`;
   let url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
 }
