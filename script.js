@@ -246,11 +246,30 @@ let flags = [
   { country: "Zimbabwe", code: "zw" }
 ];
 let currentFlags = [];
-let score = 0, lives = 3, currentFlagIndex = 0, timer, maxFlags;
+let score = 0, lives = 3, currentFlagIndex = 0, timer, maxFlags, inviteCode = generateInviteCode();
 
 document.addEventListener("DOMContentLoaded", () => {
   updateHomeLeaderboard();
+  checkInvite(); // Check for invite on load
 });
+
+function generateInviteCode() {
+  return Math.random().toString(36).substr(2, 9); // Unique 9-char code
+}
+
+function checkInvite() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const invite = urlParams.get('invite');
+  if (invite) {
+    let invites = JSON.parse(localStorage.getItem("invites") || "[]");
+    if (!invites.includes(invite)) {
+      invites.push(invite);
+      localStorage.setItem("invites", JSON.stringify(invites));
+      lives += 1; // Reward 1 extra life for joining via invite
+      alert("Thanks for joining via a friend’s invite! +1 Life to start!");
+    }
+  }
+}
 
 function startGame(numFlags) {
   console.log("startGame called with", numFlags);
@@ -263,6 +282,46 @@ function startGame(numFlags) {
   currentFlags = shuffleArray(flags).slice(0, numFlags);
   updateUI();
   nextFlag();
+}
+
+function startUltimateChallenge() {
+  let numFlags = 254;
+  document.getElementById("home-screen").style.display = "none";
+  document.getElementById("game-screen").style.display = "block";
+  score = 0;
+  lives = 10; // More lives for the challenge
+  currentFlagIndex = 0;
+  maxFlags = numFlags;
+  currentFlags = shuffleArray(flags); // Use all 254 flags
+  updateUI();
+  nextFlag();
+  document.getElementById("feedback").textContent = "Ultimate 254 Flag Challenge: Beat 200/254 in 24 hours for the Global X Leaderboard!";
+  startChallengeTimer();
+}
+
+function startChallengeTimer() {
+  let timeLeft = 24 * 60 * 60; // 24 hours in seconds
+  const timer = setInterval(() => {
+    timeLeft--;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endChallenge();
+    }
+  }, 1000);
+}
+
+function endChallenge() {
+  if (score >= 200) {
+    document.getElementById("feedback").textContent = `Congratulations! You beat 200/254—share on X for the Global Leaderboard!`;
+    shareChallengeScore();
+  } else {
+    document.getElementById("feedback").textContent = `Challenge failed (score: ${score}/254). Try again tomorrow!`;
+  }
+  document.getElementById("game-screen").style.display = "none";
+  document.getElementById("end-screen").style.display = "block";
+  document.getElementById("final-score").textContent = `Final Score: ${score}/${maxFlags}`;
+  updateHighScore();
+  showHandlePrompt();
 }
 
 function nextFlag() {
@@ -345,7 +404,9 @@ function endGame() {
   document.getElementById("end-screen").style.display = "block";
   document.getElementById("final-score").textContent = `Final Score: ${score}/${maxFlags}`;
   updateHighScore();
-  showHandlePrompt(); // Use in-game prompt instead of alert
+  showHandlePrompt();
+  document.getElementById("handle-feedback").textContent = "Invite friends on X for +1 Life each! Play now: https://tvbuzznow.com/guess-the-flags/?invite=" + inviteCode;
+  setTimeout(() => document.getElementById("handle-feedback").textContent = "", 5000); // Clear after 5s
 }
 
 function updateHighScore() {
@@ -389,12 +450,12 @@ function updateLeaderboard() {
   
   let leaderboardHTML = "Leaderboard (Local):<br>";
   leaderboard.forEach((entry, index) => {
-    leaderboardHTML += `${index + 1}. ${entry.score}/${entry.maxFlags} - ${entry.handle} - ${entry.date}<br>`;
+    leaderboardHTML += `${index + 1}. ${entry.score}/${entryMaxFlags} - ${entry.handle} - ${entry.date}<br>`;
   });
   leaderboardHTML += "<br>Share your score on X with #GuessTheFlagScore to join the global leaderboard!";
   document.getElementById("leaderboard").innerHTML = leaderboardHTML;
   document.getElementById("x-handle").value = ""; // Clear after updating
-  document.getElementById("handle-feedback").textContent = "Handle submitted! Share your score or play again.";
+  document.getElementById("handle-feedback").textContent = "Handle submitted! Invite friends on X for +1 Life each.";
   setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000); // Clear feedback after 3s
 }
 
@@ -410,7 +471,7 @@ function submitHandle() {
   }
   document.getElementById("x-handle").value = xHandle; // Update input with formatted handle
   updateLeaderboard(); // Update leaderboard with new handle
-  document.getElementById("handle-feedback").textContent = "Handle submitted! Share your score or play again.";
+  document.getElementById("handle-feedback").textContent = "Handle submitted! Invite friends on X for +1 Life each.";
   setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000); // Clear feedback after 3s
 }
 
@@ -428,16 +489,33 @@ function shareScore() {
     setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000);
     return;
   }
-  let text = `${xHandle} scored ${score}/${maxFlags} in Guess The Flag Game on TVBuzzNow! Can you beat me? Play now: https://tvbuzznow.com/guess-the-flags/ #GuessTheFlagScore #BarTrivia`;
+  let text = `${xHandle} scored ${score}/${maxFlags} in Guess The Flag Game on TVBuzzNow! Can you beat me? Play now: https://tvbuzznow.com/guess-the-flags/?invite=${inviteCode} #GuessTheFlagScore #BarTrivia`;
   let url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
+  lives += 1; // Reward 1 extra life for sharing
+  document.getElementById("handle-feedback").textContent = "Score shared on X! +1 Life for inviting friends—play again!";
   document.getElementById("x-handle").value = ""; // Clear after sharing
-  document.getElementById("handle-feedback").textContent = "Score shared on X! Play again or submit a new handle.";
+  setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000); // Clear feedback after 3s
+}
+
+function shareChallengeScore() {
+  let xHandle = document.getElementById("x-handle").value.trim();
+  if (!xHandle) {
+    document.getElementById("handle-feedback").textContent = "Please submit your X handle to share your challenge win!";
+    setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000);
+    return;
+  }
+  let text = `${xHandle} beat 200/254 in the Ultimate 254 Flag Challenge on TVBuzzNow! Join me: https://tvbuzznow.com/guess-the-flags/?invite=${inviteCode} #GuessTheFlagScore #BarTrivia`;
+  let url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+  lives += 2; // Reward 2 extra lives for challenge win
+  document.getElementById("handle-feedback").textContent = "Challenge shared on X! +2 Lives—play again!";
+  document.getElementById("x-handle").value = ""; // Clear after sharing
   setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000); // Clear feedback after 3s
 }
 
 function showHandlePrompt() {
-  document.getElementById("handle-feedback").textContent = "Please enter your X handle (e.g., @username) to update the leaderboard!";
+  document.getElementById("handle-feedback").textContent = "Please enter your X handle (e.g., @username) to update the leaderboard and invite friends!";
   setTimeout(() => document.getElementById("handle-feedback").textContent = "", 3000);
   document.getElementById("x-handle").focus(); // Auto-focus input for ease
 }
